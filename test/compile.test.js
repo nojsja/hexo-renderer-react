@@ -2,17 +2,9 @@
 'use strict'
 
 const join = require('path').join
-const compile = require('../lib/compile')
+const compile = require('../lib/renderer')
 
 const TEMPLATE_PATH = join(__dirname, 'template.jsx')
-
-const compileWithPromise = (data, locals = {}) => {
-  return new Promise((resolve) => {
-    compile(data, locals, (res) => {
-      resolve(res);
-    });
-  });
-};
 
 describe('hexo-renderer-react/lib/compile', () => {
   it('returns function to render html strings', (callback) => {
@@ -26,7 +18,7 @@ describe('hexo-renderer-react/lib/compile', () => {
       });
     `;
 
-    compileWithPromise({ text: template, path: TEMPLATE_PATH }).then((compiled) => {
+    compile({ text: template, path: TEMPLATE_PATH }).then((compiled) => {
       if (compiled !== '<div class="t1">test</div>') {
         callback('failed');
       } else {
@@ -42,7 +34,7 @@ describe('hexo-renderer-react/lib/compile', () => {
       export default () => <div className="t1">test</div>;
     `;
 
-    compileWithPromise({ text: template, path: TEMPLATE_PATH }).then((rendered) => {
+    compile({ text: template, path: TEMPLATE_PATH }).then((rendered) => {
       if (rendered !== '<div class="t1">test</div>') {
         callback('failed');
       } else {
@@ -58,7 +50,7 @@ describe('hexo-renderer-react/lib/compile', () => {
       export default () => <html>test</html>;
     `;
 
-    compileWithPromise({ text: template, path: TEMPLATE_PATH }).then((rendered) => {
+    compile({ text: template, path: TEMPLATE_PATH }).then((rendered) => {
       if (rendered !== '<!doctype html>\n<html>test</html>') {
         callback('failed');
       } else {
@@ -75,7 +67,7 @@ describe('hexo-renderer-react/lib/compile', () => {
       export default () => <Html>test</Html>;
     `;
 
-    compileWithPromise({ text: template, path: TEMPLATE_PATH }).then((rendered) => {
+    compile({ text: template, path: TEMPLATE_PATH }).then((rendered) => {
       if (rendered !== '<!doctype html>\n<html>test</html>') {
         callback('failed');
       } else {
@@ -92,7 +84,7 @@ describe('hexo-renderer-react/lib/compile', () => {
         <div>{props.message}</div>
     `;
 
-    compileWithPromise({ text: template, path: TEMPLATE_PATH }, {
+    compile({ text: template, path: TEMPLATE_PATH }, {
       message: 'Test Message'
     }).then((rendered) => {
       if (rendered !== '<div>Test Message</div>') {
